@@ -1,0 +1,22 @@
+services:
+  ollama:
+    image: ollama/ollama:rocm
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    group_add:
+      - "992"
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - ai
+    restart: unless-stopped
+
+volumes:
+  ollama:
+
+networks:
+  ai:
+    external: true
