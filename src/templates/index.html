@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Czat z Ollamą</title>
+</head>
+<body>
+  <h1>Czat</h1>
+  <div id="chat"></div>
+  <input id="pole" type="text" placeholder="Napisz wiadomość...">
+  <button id="wyslij">Wyślij</button>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const pole = document.getElementById("pole");
+    const przycisk = document.getElementById("wyslij");
+
+    function dodajWiadomosc(autor, tekst) {
+      const p = document.createElement("p");
+      p.textContent = autor + ": " + tekst;
+      chat.appendChild(p);
+    }
+
+    async function wyslij() {
+      const tekst = pole.value.trim();
+      if (!tekst) return;
+
+      dodajWiadomosc("Ty", tekst);
+      pole.value = "";
+
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: tekst }),
+      });
+      const dane = await res.json();
+      dodajWiadomosc("Model", dane.response);
+    }
+
+    przycisk.addEventListener("click", wyslij);
+    pole.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") wyslij();
+    });
+  </script>
+</body>
+</html>

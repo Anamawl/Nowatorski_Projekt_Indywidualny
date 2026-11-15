@@ -1,0 +1,16 @@
+services:
+  web_app:
+    networks:
+      - ai
+    volumes:
+      - ../../src:/app
+    ports:
+      - "8000:5000"
+    build: ../../src
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    restart: unless-stopped
+
+networks:
+  ai:
+    external: true
